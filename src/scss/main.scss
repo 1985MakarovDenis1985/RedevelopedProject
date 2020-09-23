@@ -19,6 +19,7 @@
   border: 1px solid red;
   display: inline-block;
   margin-left: 50px;
+  position: relative;
 }
 
 .slider_block_3{
@@ -30,6 +31,19 @@
   margin-left: 50px;
 }
 
+.background_ms {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+}
+
+.desc_ms {
+  width: 100%;
+  height: 20%;
+  background: red;
+  bottom: 10%;
+}
 
 
 

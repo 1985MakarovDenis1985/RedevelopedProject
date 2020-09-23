@@ -114,62 +114,62 @@
             function playPag(mainBox, elClass, animationOfName) {
                 for (let i = 0; i < mainBox.length; i++) {
                     let desc = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.background_ms > div.desc_ms'));
-                    let boxS = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.slider_wrapper_ms > div.slider_box_ms'));
-                                    let firstSlidesLine = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.slider_wrapper_ms > div.slider_box_ms > div.slider_lines_ms > div.first_twin_ms'));
-                    let imgPath = Array.from(document.querySelectorAll('.' + elClass + i + '> div.background_ms'));
+                                        let boxS = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.slider_wrapper_ms > div.slider_box_ms'));
+                                        let firstSlidesLine = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.slider_wrapper_ms > div.slider_box_ms > div.slider_lines_ms > div.first_twin_ms'));
+                                        let imgPath = Array.from(document.querySelectorAll('.' + elClass + i + '> div.background_ms'));
 
-                    // let pugBox = createSlide.createS("div", "pagination_block_ms");
-                    // let pugBtnBox = createSlide.createS("div", "pagination_block_btn_ms");
-                    // let pugBoxCover = createSlide.createS("div", "pagination_block_cover_ms");
-                    // createSlide.addChild(pugBox, [pugBoxCover, pugBtnBox]);
-                    // for (let q = 0; q < imgPath.length; q++) {
-                    //     let pugBtn = createSlide.createS("div", "pagination_btn_ms");
-                    //     pugBtn.setAttribute("data-pugnumber", q);
-                    //     pugBtnBox.appendChild(pugBtn)
-                    // }
-                    // mainBox[i].appendChild(pugBox)
-
-
-                    // let btn = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.pagination_block_ms > div.pagination_block_btn_ms > div.pagination_btn_ms'));
-                    // let btnBlock = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.pagination_block_ms > div.pagination_block_cover_ms'));
-                    // let pugBlock = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.pagination_block_ms'))
-                    //
-                    // if (pagination === false) {
-                    //     pugBlock.map((el) => {
-                    //         el.style.display = "none"
-                    //     })
-                    // } else if (pagination === true) {
-                    //     pugBlock.map((el) => {
-                    //         el.style.display = "block"
-                    //     })
-                    // }
-
-                                    if (animationOfName === "StepToRight_ms" || animationOfName === "PutToRight_ms") {
-                                        lastLine = getComputedStyle(firstSlidesLine[firstSlidesLine.length - 1]).animationDelay;
-                                    } else if (animationOfName === "StepToLeft_ms" || animationOfName === "PutToLeft_ms") {
-                                        lastLine = getComputedStyle(firstSlidesLine[0]).animationDelay;
-                                    }
-
-                                    ////////  Timing  /////////////////////////////////////
-                                    timeOfChange = parseInt(lastLine + 1000) * 1000;
-                                    (timing) ? timeDefault = timing : timeDefault = 1000;
-
-
-                                    ///////  create BG Position  /////////////////////////
-                                    for (let q = 0; q < firstSlidesLine.length; q++) {
-                                        firstSlidesLine[q].style.backgroundPositionX = positionBg + "%";
-                                        positionBg = positionBg + 5.262;  ///// initially 5.2560
-                                        firstSlidesLine[q].style.zIndex = "1000";
-                                    }
-                    ////////  create FIRST IMG  ///////////        //// => was in version 1.1
-                    for (let q = 0; q < firstSlidesLine.length; q++) {
-                        firstSlidesLine[q].style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
-                        firstSlidesLine[q].style.animationName = animationOfName;
-                        setTimeout(function () {
-                            boxS[0].style.backgroundSize = "100% 100%";
-                            boxS[0].style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
-                        }, timeOfChange + timeDefault)
+                    let pugBox = createSlide.createS("div", "pagination_block_ms");
+                    let pugBtnBox = createSlide.createS("div", "pagination_block_btn_ms");
+                    let pugBoxCover = createSlide.createS("div", "pagination_block_cover_ms");
+                    createSlide.addChild(pugBox, [pugBoxCover, pugBtnBox]);
+                    for (let q = 0; q < imgPath.length; q++) {
+                        let pugBtn = createSlide.createS("div", "pagination_btn_ms");
+                        pugBtn.setAttribute("data-pugnumber", q);
+                        pugBtnBox.appendChild(pugBtn)
                     }
+                    mainBox[i].appendChild(pugBox)
+
+
+                    let btn = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.pagination_block_ms > div.pagination_block_btn_ms > div.pagination_btn_ms'));
+                    let btnBlock = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.pagination_block_ms > div.pagination_block_cover_ms'));
+                    let pugBlock = Array.from(document.querySelectorAll('.' + elClass + i + ' > div.pagination_block_ms'))
+
+                    if (pagination === false) {
+                        pugBlock.map((el) => {
+                            el.style.display = "none"
+                        })
+                    } else if (pagination === true) {
+                        pugBlock.map((el) => {
+                            el.style.display = "block"
+                        })
+                    }
+
+                                                if (animationOfName === "StepToRight_ms" || animationOfName === "PutToRight_ms") {
+                                                    lastLine = getComputedStyle(firstSlidesLine[firstSlidesLine.length - 1]).animationDelay;
+                                                } else if (animationOfName === "StepToLeft_ms" || animationOfName === "PutToLeft_ms") {
+                                                    lastLine = getComputedStyle(firstSlidesLine[0]).animationDelay;
+                                                }
+
+                                                ////////  Timing  /////////////////////////////////////
+                                                timeOfChange = parseInt(lastLine + 1000) * 1000;
+                                                (timing) ? timeDefault = timing : timeDefault = 1000;
+
+
+                                                ///////  create BG Position  /////////////////////////
+                                                for (let q = 0; q < firstSlidesLine.length; q++) {
+                                                    firstSlidesLine[q].style.backgroundPositionX = positionBg + "%";
+                                                    positionBg = positionBg + 5.262;  ///// initially 5.2560
+                                                    firstSlidesLine[q].style.zIndex = "1000";
+                                                }
+                    ////////  create FIRST IMG  ///////////        //// => was in version 1.1
+                                                for (let q = 0; q < firstSlidesLine.length; q++) {
+                                                    firstSlidesLine[q].style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
+                                                    firstSlidesLine[q].style.animationName = animationOfName;
+                                                    setTimeout(function () {
+                                                        boxS[0].style.backgroundSize = "100% 100%";
+                                                        boxS[0].style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
+                                                    }, timeOfChange + timeDefault)
+                                                }
                     btn[0].classList.add("btn_active_ms");
 
                     //// for first opened paginations

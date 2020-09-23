@@ -71,6 +71,7 @@
             this.elClass = elementClass;
             this.mainBox = document.getElementById(this.elClass);
             this.mainBox.appendChild(sl.createLineSlide());
+            this.mainBox.style.position = "relative"
             return this
         },
 
@@ -89,11 +90,8 @@
             }
 
             arrLines.map(el => {
-                // el.style.animationName = this.animationOfName
                 el.style.animationDuration = lineDuration + "s"
             })
-
-            // console.log(lineDuration)
 
             let incrementDuration = 0.2;
             if (this.animationOfName === "StepToRight_ms" || this.animationOfName === "PutToRight_ms") {
@@ -132,51 +130,36 @@
                     backgroundPosition = backgroundPosition + 5.25;
                     el.style.zIndex = "1000"
 
-                    ///////  Create first IMG  /////////////////////////
+                    ///////  Create first IMG of slide  /////////////////////////
                     el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
-                    el.style.animationName = sliderAnimationName;
-                    boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length - 1].dataset.path_img})`;
-                    boxS[0].style.backgroundSize = "100% 100%";
-
+                    el.style.animationName = sliderAnimationName; // will do separated option
                 })
 
+                ///// Appear first desc of slide and first BG
+                boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length - 1].dataset.path_img})`;
+                setTimeout(() => {desc[0].style.opacity = "1"}, timeOfChange)
 
                 let intervalChangeSlide = setInterval(() => {
-
                     new Promise(res => {
-                        arrLines.map((el) => {
-                            el.style.animationName = "nothing";
-                        })
+                        arrLines.map((el) => {el.style.animationName = "nothing"})
+                        desc.map(el => {el.style.opacity = "0"})
                         res()
-                    })
-                        .then(() => {
+                    }).then(() => {
+                        ////////  Rename animation of line
+                        setTimeout(() => {
+                            (countImage == imgPath.length - 1) ? countImage = 0 : countImage = countImage += 1
+                            arrLines.map((el, index) => {
+                                el.style.animationName = sliderAnimationName;
+                                el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
+                            });
+                            (countImage == 0) ? boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length - 1].dataset.path_img})` : boxS[0].style.backgroundImage = `url(${imgPath[countImage - 1].dataset.path_img})`;
+
+                            //////// Animation Description
                             setTimeout(() => {
-                                (countImage == imgPath.length - 1) ? countImage = 0 : countImage = countImage += 1
-                                arrLines.map((el, index) => {
-                                    el.style.animationName = sliderAnimationName;
-                                    el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
-                                });
-                                (countImage == 0) ? boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length - 1].dataset.path_img})` : boxS[0].style.backgroundImage = `url(${imgPath[countImage - 1].dataset.path_img})`;
-                                console.log(countImage)
-                            }, 50)
-                        })
-
-                    // setTimeout(()=>{
-                    //     arrLines.map((el, index) => {
-                    //         el.style.animationName = "nothing";
-                    //     })
-                    // },10)
-                    //
-                    // setTimeout(()=>{
-                    //     (countImage == imgPath.length-1) ? countImage = 0: countImage = countImage += 1
-                    //     arrLines.map((el, index) => {
-                    //         el.style.animationName = sliderAnimationName;
-                    //         el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
-                    //     });
-                    //     (countImage == 0) ? boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length-1].dataset.path_img})` : boxS[0].style.backgroundImage = `url(${imgPath[countImage-1].dataset.path_img})`;
-                    // },30)
-
-
+                                desc[countImage].style.opacity = "1"
+                            }, timeOfChange)
+                        }, 100)
+                    })
                 }, timeOfChange + time)
 
 
@@ -184,6 +167,8 @@
 
 
             time = 1500;
+            speed = .2;
+            lineDuration = .5;
             // return this
         }
     };
@@ -198,7 +183,7 @@
 
 
 MagickSlider.findSlider("slider_block_1")
-    .time(1000)
+    .time(3000)
     .lineDuration(.2)
     .speed(0.1)
     // .pagination(true)
