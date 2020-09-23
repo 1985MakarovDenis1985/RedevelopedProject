@@ -1,5 +1,26 @@
 @import "modules/slider_box";
 @import "modules/keyframes";
 @import "../../node_modules/normalize.scss/normalize";
-@import "modules/third_path";
+
+
+.slider_block_1{
+  margin-top: 100px;
+  width: 400px;
+  height: 280px;
+  border: 1px solid red;
+  display: inline-block;
+  margin-left: 50px;
+}
+
+.slider_block_2{
+  margin-top: 100px;
+  width: 400px;
+  height: 280px;
+  border: 1px solid red;
+  display: inline-block;
+  margin-left: 50px;
+}
+
+
+
 
