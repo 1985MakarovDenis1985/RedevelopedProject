@@ -28,13 +28,26 @@
   position: relative;
 
   .slider_line_animation_ms{
-    border: 1px solid red;
+    //border: 1px solid red;
     width: 100%;
     height: 100%;
     position: absolute;
-    transition: .5s;
+    //transition: .5s;
     //animation-name: StepToRight_ms;
     animation-duration: .5s;
-    animation-fill-mode: forwards;
+    animation-fill-mode: backwards;
+    //background-image: url("../img/day__1.jpg");
+    background-size: 2000% 100%;
   }
 }
+
+//.desc_ms{
+//  position: absolute;
+//  background: rgba(255,255,255,0.2);
+//  width: 100%;
+//  height: 10%;
+//  text-outline:  -10%;
+//  background: red;
+//  z-index: 10000;
+//  opacity: 1;
+//}

@@ -4,6 +4,7 @@
     let time = 1500;
     let animationDirection = "StepToRight";
     let speed = .2;
+    let lineDuration = .5;
     let pagination = false;
 
 /////////  TEMPLATE SLIDER BOX  //////////////////////////
@@ -33,8 +34,14 @@
             return this
         },
 
+        lineDuration: function (seconds) {
+            lineDuration = seconds;
+            return this
+        },
+
         animationDirection: function (name) {
             animationDirection = name;
+            // console.log(this)
             return this
         },
 
@@ -51,13 +58,13 @@
         /////// CREATE SL  ////////////////////////////////////
 
         createLineSlide: function () {
-            let sliderAppearMs = createSlide.createS("div", "slider_box_ms");
-            let sliderBox = createSlide.createS("div", "slider_wrapper_ms ");
+            let sliderBox = createSlide.createS("div", "slider_box_ms");
+            let sliderBoxWrapper = createSlide.createS("div", "slider_wrapper_ms ");
             for (let i = 0; i < 20; i++) {  /// => create line in
-                createSlide.addChild(sliderAppearMs, [createSlide.addChild(createSlide.createS("div", "slider_lines_ms"), [createSlide.createS("div", "slider_line_animation_ms")])]);
+                createSlide.addChild(sliderBox, [createSlide.addChild(createSlide.createS("div", "slider_lines_ms"), [createSlide.createS("div", "slider_line_animation_ms")])]);
             }
-            sliderBox.appendChild(sliderAppearMs);
-            return sliderBox
+            sliderBoxWrapper.appendChild(sliderBox);
+            return sliderBoxWrapper
         },
         ///////  FIND SLIDER  ////////////////////////////////////
         findSlider: function (elementClass) {
@@ -69,7 +76,7 @@
 
         ///////  PLAY SLIDER  ////////////////////////////////////
         play: function () {
-            this.arrLines = Array.from(document.querySelectorAll(`.${this.elClass} > div.slider_wrapper_ms > div.slider_box_ms > div.slider_lines_ms > div.slider_line_animation_ms`));
+            const arrLines = Array.from(document.querySelectorAll(`.${this.elClass} > div.slider_wrapper_ms > div.slider_box_ms > div.slider_lines_ms > div.slider_line_animation_ms`));
 
             if (animationDirection === "StepToRight") {
                 this.animationOfName = "StepToRight_ms"
@@ -80,24 +87,105 @@
             } else if (animationDirection === "PutToLeft") {
                 this.animationOfName = "PutToLeft_ms";
             }
-            this.arrLines.map(el=>el.style.animationName = this.animationOfName)
 
-            let y = 0.2;
+            arrLines.map(el => {
+                // el.style.animationName = this.animationOfName
+                el.style.animationDuration = lineDuration + "s"
+            })
+
+            // console.log(lineDuration)
+
+            let incrementDuration = 0.2;
             if (this.animationOfName === "StepToRight_ms" || this.animationOfName === "PutToRight_ms") {
-                for (let i = 0; i < this.arrLines.length; i++) {
-                    this.arrLines[i].style.animationDelay = y + "s";
-                    (speed) ? y += speed : y += 0.2
+                for (let i = 0; i < arrLines.length; i++) {
+                    arrLines[i].style.animationDelay = incrementDuration + "s";
+                    (speed) ? incrementDuration += speed : incrementDuration += 0.2
                 }
             } else if (this.animationOfName === "StepToLeft_ms" || this.animationOfName === "PutToLeft_ms") {
-                for (let i = this.arrLines.length - 1; i >= 0; i--) {
-                    this.arrLines[i].style.animationDelay = y + "s";
-                    (speed) ? y += speed : y += 0.2
+                for (let i = arrLines.length - 1; i >= 0; i--) {
+                    arrLines[i].style.animationDelay = incrementDuration + "s";
+                    (speed) ? incrementDuration += speed : incrementDuration += 0.2
                 }
             }
 
+            (function createS(sliderAnimationName, elClass, animationName) {
+
+                let lastLine, timeOfChange, backgroundPosition = 0, countImage = 0;
+                const desc = Array.from(document.querySelectorAll(`.${elClass} > div.background_ms > div.desc_ms`));
+                let boxS = Array.from(document.querySelectorAll(`.${elClass} > div.slider_wrapper_ms > div.slider_box_ms`));
+                let imgPath = Array.from(document.querySelectorAll(`.${elClass}> div.background_ms`));
+
+                ////////  VALUE DELAY LAST LINE  /////////////////////////////////////
+                if (sliderAnimationName === "StepToRight_ms" || sliderAnimationName === "PutToRight_ms") {
+                    lastLine = getComputedStyle(arrLines[arrLines.length - 1]).animationDelay;
+                } else if (sliderAnimationName === "StepToLeft_ms" || sliderAnimationName === "PutToLeft_ms") {
+                    lastLine = getComputedStyle(arrLines[0]).animationDelay;
+                }
+
+                ////////  Timing  /////////////////////////////////////
+                timeOfChange = (parseInt(lastLine) + lineDuration) * 1000;
+                (time) ? time = time : time = 1500;
+
+                ///////  Create BG Position  /////////////////////////
+                arrLines.map((el, index) => {
+                    el.style.backgroundPositionX = backgroundPosition + "%"
+                    backgroundPosition = backgroundPosition + 5.25;
+                    el.style.zIndex = "1000"
+
+                    ///////  Create first IMG  /////////////////////////
+                    el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
+                    el.style.animationName = sliderAnimationName;
+                    boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length - 1].dataset.path_img})`;
+                    boxS[0].style.backgroundSize = "100% 100%";
+
+                })
+
+
+                let intervalChangeSlide = setInterval(() => {
+
+                    new Promise(res => {
+                        arrLines.map((el) => {
+                            el.style.animationName = "nothing";
+                        })
+                        res()
+                    })
+                        .then(() => {
+                            setTimeout(() => {
+                                (countImage == imgPath.length - 1) ? countImage = 0 : countImage = countImage += 1
+                                arrLines.map((el, index) => {
+                                    el.style.animationName = sliderAnimationName;
+                                    el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
+                                });
+                                (countImage == 0) ? boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length - 1].dataset.path_img})` : boxS[0].style.backgroundImage = `url(${imgPath[countImage - 1].dataset.path_img})`;
+                                console.log(countImage)
+                            }, 50)
+                        })
+
+                    // setTimeout(()=>{
+                    //     arrLines.map((el, index) => {
+                    //         el.style.animationName = "nothing";
+                    //     })
+                    // },10)
+                    //
+                    // setTimeout(()=>{
+                    //     (countImage == imgPath.length-1) ? countImage = 0: countImage = countImage += 1
+                    //     arrLines.map((el, index) => {
+                    //         el.style.animationName = sliderAnimationName;
+                    //         el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
+                    //     });
+                    //     (countImage == 0) ? boxS[0].style.backgroundImage = `url(${imgPath[imgPath.length-1].dataset.path_img})` : boxS[0].style.backgroundImage = `url(${imgPath[countImage-1].dataset.path_img})`;
+                    // },30)
+
+
+                }, timeOfChange + time)
+
+
+            })(this.animationOfName, this.elClass)
+
+
+            time = 1500;
+            // return this
         }
-
-
     };
 
     window.MagickSlider = sl;
@@ -110,26 +198,29 @@
 
 
 MagickSlider.findSlider("slider_block_1")
-    .time(3000)
-    // .speed(0.1)
+    .time(1000)
+    .lineDuration(.2)
+    .speed(0.1)
     // .pagination(true)
     .animationDirection("PutToRight")
     .play();
 
 MagickSlider.findSlider("slider_block_2")
-    .time(5000)
-    // .speed(0.1)
+    .time(1000)
+    .lineDuration(.5)
+    .speed(0.2)
     // .pagination(true)
     .animationDirection("StepToLeft")
     .play();
 
-// LineSlider.findSlider("picture_monna")
-//     .time(2000)
-//     .speed(0.1)
-//     .animationName("PutToRight")
-//     .pagination(true)
-//     .play();
-//
+MagickSlider.findSlider("slider_block_3")
+    .time(2000)
+    // .speed(0.1)
+    .animationDirection("PutToRight")
+    // .lineDuration(2.8)
+    // .pagination(true)
+    .play();
+
 // LineSlider.findSlider("picture_right")
 //     .time(3000)
 //     .speed(0.1)
@@ -143,3 +234,4 @@ MagickSlider.findSlider("slider_block_2")
 //     // .speed(0.1)
 //     .animationName("StepToLeft")
 //     .play();
+
