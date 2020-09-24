@@ -123,20 +123,22 @@
                 const imgPath = Array.from(document.querySelectorAll(`.${elClass} > div.background_ms`));
                 const pagContainer = document.querySelector(`.${elClass} > div.pag_box_ms`)
                 const pagBtn = Array.from(document.querySelectorAll(`.${elClass} > div.pag_box_ms > div.pag_btn_container_ms > div.pag_btn_ms`));
+                const pagCover = document.querySelector(`.${elClass} > div.pag_box_ms > div.pag_cover_ms`)
                 pagBtn[0].classList.add("pag_btn_active_ms")
 
-                ////////  VALUE DELAY LAST LINE  /////////////////////////////////////
+
+                //// ---- VALUE DELAY LAST LINE ----
                 if (sliderAnimationName === "StepToRight_ms" || sliderAnimationName === "PutToRight_ms") {
                     lastLine = getComputedStyle(arrLines[arrLines.length - 1]).animationDelay;
                 } else if (sliderAnimationName === "StepToLeft_ms" || sliderAnimationName === "PutToLeft_ms") {
                     lastLine = getComputedStyle(arrLines[0]).animationDelay;
                 }
 
-                ////////  Timing  /////////////////////////////////////
+                //// ---- Timing ----
                 timeOfChange = (parseInt(lastLine) + lineDuration) * 1000;
                 (time) ? time = time : time = 1500;
 
-                ///////  Create BG Position  /////////////////////////
+                //// ---- Create BG Position ----
                 arrLines.map((el) => {
                     el.style.backgroundPositionX = backgroundPosition + "%"
                     backgroundPosition = backgroundPosition + 5.25;
@@ -144,21 +146,24 @@
                 })
 
                 function firstPlaySlide() {
-
                     arrLines.map((el) => {
-                        ///////  Create first IMG of slide  /////////////////////////
+                        //// ---- Create first IMG of slide ----
                         el.style.animationName = "nothing"; // will do separated option
                         setTimeout(() => {
                             el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
                             el.style.animationName = sliderAnimationName; // will do separated option
                         }, 100)
                     });
+                    //// ---- Open pagination ----
+                    pagCover.style.zIndex = "100"
                     ///// Appear first desc of slide and first BG
                     setTimeout(() => {
+                        //// ---- Close pagination ----
+                        pagCover.style.zIndex = "1"
+                        //// ---- Description block is appearing ----
                         desc[countImage].style.opacity = "1"
                     }, timeOfChange)
-                };
-
+                }
                 firstPlaySlide();
 
                 function activeBtn(){
@@ -171,16 +176,20 @@
                     intervalChangeSlide = setInterval(() => {
                         activeBtn()
                         new Promise(res => {
-                            /////// Remove animation of line
+                            //// ---- Open pagination ----
+                            pagCover.style.zIndex = "100"
+
+                            //// ---- Remove animation of line ----
                             arrLines.map((el) => {
                                 el.style.animationName = "nothing"
                             })
+                            //// ---- Description block is disappearing ----
                             desc.map(el => {
                                 el.style.opacity = "0"
                             })
                             res()
                         }).then(() => {
-                            ////////  Set animation of line
+                            //// ---- Set animation of line ----
                             setTimeout(() => {
                                 (countImage === imgPath.length - 1) ? countImage = 0 : countImage = countImage += 1
                                 arrLines.map((el) => {
@@ -188,8 +197,9 @@
                                     el.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`;
                                 });
                                 (countImage === 0) ? boxS.style.backgroundImage = `url(${imgPath[imgPath.length - 1].dataset.path_img})` : boxS.style.backgroundImage = `url(${imgPath[countImage - 1].dataset.path_img})`;
-                                //////// Animation Description
+                                //// ---- Animation Description ----
                                 setTimeout(() => {
+                                    pagCover.style.zIndex = "1"
                                     desc[countImage].style.opacity = "1"
                                 }, timeOfChange)
                             }, 100)
@@ -202,11 +212,10 @@
 
                         el.addEventListener("click", (e) => {
                             clearInterval(intervalChangeSlide)
-                            // pagBtn.map(el=>{
-                            //     pagBtn.map(el=>{el.classList.remove("pag_btn_active_ms")})
-                            // })
-                            // pagBtn[countImage].classList.add("pag_btn_active_ms")
-
+                            pagBtn.map(el=>{
+                                pagBtn.map(el=>{el.classList.remove("pag_btn_active_ms")})
+                            })
+                            pagBtn[e.target.dataset.number].classList.add("pag_btn_active_ms")
                             new Promise((res, rej) => {
                                 try {
                                     boxS.style.backgroundImage = `url(${imgPath[countImage].dataset.path_img})`
@@ -259,7 +268,7 @@ MagickSlider.findSlider("slider_block_2")
     .time(2000)
     .lineDuration(.5)
     .speed(0.2)
-    // .pagination(false)
+    .pagination(true)
     .animationDirection("StepToLeft")
     .play();
 
